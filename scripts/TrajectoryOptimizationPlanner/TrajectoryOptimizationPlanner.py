@@ -133,7 +133,7 @@ class TrajectoryOptimizationPlanner:
             status, is_collision_free, trajectory = "start state in collision", False, -1
             is_start_state_in_collision = self.world.is_given_state_in_collision(self.robot.id, start_state, group)
             if is_start_state_in_collision:
-                print "is_start_state_in_collision", is_start_state_in_collision
+                print("is_start_state_in_collision", is_start_state_in_collision)
                 status = "start state in collision"
                 return status, is_collision_free, trajectory
         elif len(group):
@@ -148,7 +148,7 @@ class TrajectoryOptimizationPlanner:
                 status, is_collision_free, trajectory = "goal state in collision", False, -1
                 is_goal_in_collision = self.world.is_given_state_in_collision(self.robot.id, goal_state, group)
                 if is_goal_in_collision:
-                    print "is_goal_in_collision", is_goal_in_collision
+                    print("is_goal_in_collision", is_goal_in_collision)
                     status = "goal state in collision"
                     return status, is_collision_free, trajectory
 

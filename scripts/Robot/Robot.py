@@ -3,7 +3,7 @@ from scripts.utils.utils import Utils as utils
 from urdf_parser_py.urdf import URDF
 from scripts.Robot.Planner import TrajectoryPlanner
 import itertools
-from srdfdom.srdf import SRDF
+from ..srdf_parser_py.srdf import SRDF
 from scripts.utils.dict import DefaultOrderedDict
 from collections import OrderedDict
 
@@ -36,7 +36,7 @@ class Robot:
         for gs in self.srdf.group_states:
             joint_map = OrderedDict()
             for joint in  gs.joints:
-                joint_map[joint.name] = joint.value[0]
+                joint_map[joint.name] = joint.value
             self.group_states_map[gs.name, gs.group] = joint_map
             self.joint_states_map[gs.name] = joint_map
             self.group_map[gs.group] = joint_map.keys()
@@ -57,7 +57,7 @@ class Robot:
 
     # planning group name as string to joint names list
     def get_planning_group_from_srdf(self, group):
-        if group in self.group_map:
+        if tuple(group) in self.group_map:
             group = self.group_map[group]
         return group
 
@@ -128,7 +128,7 @@ class Robot:
                 joints = []
 
                 assert len(current_state) == len(goal_state) == len(joint_group)
-                for joint, c_state, n_state in itertools.izip(joint_group, current_state, goal_state):
+                for joint, c_state, n_state in itertools.zip(joint_group, current_state, goal_state):
                     if joint in self.model.joint_map:
                         ignore_state = False
                         if ignore_goal_states is not None and len(ignore_goal_states):

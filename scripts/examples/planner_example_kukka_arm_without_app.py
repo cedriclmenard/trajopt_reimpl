@@ -10,7 +10,7 @@ home = os.path.expanduser('~')
 class PlannerExample:
     def __init__(self):
 
-        location_prefix = home + '/masterThesis/bullet3/data/'
+        # location_prefix = home + '/masterThesis/bullet3/data/'
 
         config = {
             "use_gui": True,
@@ -38,9 +38,9 @@ class PlannerExample:
         # self.robot_id = self.planner.load_robot(urdf_file, position=[0, 0.25, 0.6])
 
         self.planner.world.toggle_rendering(0)
-        plane_id = self.planner.load_from_urdf("plane", urdf_file=location_prefix + "plane.urdf", position=[0, 0, 0.0])
+        # plane_id = self.planner.load_from_urdf("plane", urdf_file=location_prefix + "plane.urdf", position=[0, 0, 0.0])
 
-        table_id = self.planner.add_constraint_from_urdf("table", urdf_file=location_prefix + "table/table.urdf", position=[0, 0, 0.0])
+        # table_id = self.planner.add_constraint_from_urdf("table", urdf_file=location_prefix + "table/table.urdf", position=[0, 0, 0.0])
 
         self.box_id = self.planner.add_constraint("box1", shape=self.planner.world.BOX, size=box_size[box],
                                                   position=box_loc[loc],
@@ -53,7 +53,7 @@ class PlannerExample:
     def run(self):
         start = randint(1, 11)
         end = randint(1, 11)
-        print start, end
+        print(start, end)
         if start != end:
             start_state = "loc" + str(start)
             goal_state = "loc" + str(end)

@@ -1,6 +1,6 @@
 robot:
-    urdf: "/home/mahesh/catkin_ws/src/iai_robots/iai_donbot_description/robots/don_bot.urdf"
-    srdf: "/home/mahesh//catkin_ws/src/iai_robots/iai_donbot_description/ur5_moveit_config/config/ur5.srdf"
+    urdf: "/home/cedric/catkin_ws/src/iai_robots/iai_donbot_description/robots/model2.urdf"
+    srdf: "/home/cedric/catkin_ws/src/iai_robots/iai_donbot_description/ur5_moveit_config/config/ur5.srdf"
     position: [0.6, 0.2, 0]
     orientation: [0, 0, -1.57]
     joints_groups:

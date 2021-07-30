@@ -2,18 +2,19 @@ import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 from scripts.simulation.SimulationWorld import SimulationWorld
 from scripts.GUI import TrajPlanner
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 import sys
 from scripts.TrajectoryOptimizationPlanner.TrajectoryOptimizationPlanner import TrajectoryOptimizationPlanner
 from collections import OrderedDict
 from random import randrange, uniform, randint
 
 
+
 class PlannerExample:
     def __init__(self):
         home = os.path.expanduser('~')
 
-        location_prefix = home + '/masterThesis/bullet3/data/'
+        location_prefix = home + '/Documents/repos/bullet3/data/'
 
         config = {
             "use_gui": True,
@@ -60,8 +61,8 @@ class PlannerExample:
 def start_planner_app():
     example = PlannerExample()
     example.init()
-    app = QtGui.QApplication(sys.argv)
-    window = TrajPlanner.PlannerGui(verbose="DEBUG", file_log=False, planner=example.planner)
+    app = QtWidgets.QApplication(sys.argv)
+    window = TrajPlanner.PlannerGui(verbose="DEBUG", file_log=False, planner=example.planner, config_file=os.path.join(os.path.dirname(__file__), "..", "..", "config", "robot_config_kuka_arm.yaml"))
     window.show()
     sys.exit(app.exec_())
 

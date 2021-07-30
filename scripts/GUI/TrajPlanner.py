@@ -1,4 +1,4 @@
-from PyQt4 import QtGui
+from PyQt5 import QtWidgets, QtWidgets
 from scripts.utils import yaml_paser as yaml
 import functools
 from scripts.utils.utils import Utils as utils
@@ -6,9 +6,9 @@ import logging
 import os
 
 
-class PlannerGui(QtGui.QMainWindow):
+class PlannerGui(QtWidgets.QMainWindow):
     def __init__(self, logger_name=__name__, config_file=None, verbose=False, file_log=False, planner=None, width=900, height=400):
-        QtGui.QMainWindow.__init__(self)
+        QtWidgets.QMainWindow.__init__(self)
         self.setGeometry(200, 100, width, height)
 
         # self.sim_world = SimulationWorld.SimulationWorld(self.robot_config["urdf"])
@@ -36,43 +36,43 @@ class PlannerGui(QtGui.QMainWindow):
         self.sqp_spin_box = {}
         self.sqp_combo_box = {}
 
-        self.sqp_config_group_box = QtGui.QGroupBox('SQP solver Parameters')
-        self.sqp_config_form = QtGui.QFormLayout()
+        self.sqp_config_group_box = QtWidgets.QGroupBox('SQP solver Parameters')
+        self.sqp_config_form = QtWidgets.QFormLayout()
 
-        self.sqp_config_scroll = QtGui.QScrollArea()
+        self.sqp_config_scroll = QtWidgets.QScrollArea()
 
         self.robot_config_params = {}
         self.robot_config_labels = {}
         self.robot_config_spin_box = {}
         self.robot_config_combo_box = {}
         self.robot_config_params_spin_box = {}
-        self.robot_config_group_box = QtGui.QGroupBox('Robot Actions')
-        self.simulation_action_group_box = QtGui.QGroupBox('Simulation')
+        self.robot_config_group_box = QtWidgets.QGroupBox('Robot Actions')
+        self.simulation_action_group_box = QtWidgets.QGroupBox('Simulation')
 
-        self.robot_config_hbox = QtGui.QVBoxLayout()
+        self.robot_config_hbox = QtWidgets.QVBoxLayout()
 
-        self.robot_config_vbox_layout = QtGui.QVBoxLayout()
+        self.robot_config_vbox_layout = QtWidgets.QVBoxLayout()
 
-        self.robot_config_form = QtGui.QFormLayout()
+        self.robot_config_form = QtWidgets.QFormLayout()
 
         self.robot_action_buttons = {}
-        self.robot_action_button_group = QtGui.QButtonGroup(self)
-        self.robot_action_buttons["execute"] = QtGui.QPushButton('Execute')
-        self.robot_action_buttons["plan"] = QtGui.QPushButton('Plan')
-        self.robot_action_buttons["random_pose"] = QtGui.QPushButton('Random Pose')
-        self.robot_action_buttons["plan_and_execute"] = QtGui.QPushButton('Plan and Execute')
-        self.robot_action_button_hbox = QtGui.QHBoxLayout()
+        self.robot_action_button_group = QtWidgets.QButtonGroup(self)
+        self.robot_action_buttons["execute"] = QtWidgets.QPushButton('Execute')
+        self.robot_action_buttons["plan"] = QtWidgets.QPushButton('Plan')
+        self.robot_action_buttons["random_pose"] = QtWidgets.QPushButton('Random Pose')
+        self.robot_action_buttons["plan_and_execute"] = QtWidgets.QPushButton('Plan and Execute')
+        self.robot_action_button_hbox = QtWidgets.QHBoxLayout()
 
-        self.robot_config_scroll = QtGui.QScrollArea()
+        self.robot_config_scroll = QtWidgets.QScrollArea()
 
         self.selected_robot_combo_value = {}
         self.selected_robot_spin_value = {}
 
-        self.statusBar = QtGui.QStatusBar()
+        self.statusBar = QtWidgets.QStatusBar()
 
-        self.main_widget = QtGui.QWidget(self)
-        self.main_layout = QtGui.QVBoxLayout(self.main_widget)
-        self.main_hbox_layout = QtGui.QHBoxLayout()
+        self.main_widget = QtWidgets.QWidget(self)
+        self.main_layout = QtWidgets.QVBoxLayout(self.main_widget)
+        self.main_hbox_layout = QtWidgets.QHBoxLayout()
 
         self.last_status = "Last Status: "
         self.init_ui(25)
@@ -93,12 +93,12 @@ class PlannerGui(QtGui.QMainWindow):
         max_sqp_config = 1e4
 
         for key, value in self.sqp_config.items():
-            self.sqp_labels[key] = QtGui.QLabel(key)
+            self.sqp_labels[key] = QtWidgets.QLabel(key)
             if not isinstance(value, list):
-                self.sqp_spin_box[key] = QtGui.QDoubleSpinBox(self)
+                self.sqp_spin_box[key] = QtWidgets.QDoubleSpinBox(self)
 
             else:
-                self.sqp_combo_box[key] = QtGui.QComboBox(self)
+                self.sqp_combo_box[key] = QtWidgets.QComboBox(self)
 
         for key in self.sqp_labels:
             if not isinstance(self.sqp_config[key], list):
@@ -130,7 +130,7 @@ class PlannerGui(QtGui.QMainWindow):
 
         for key, value in self.robot_config.items():
             if key != "urdf" and key != "srdf" and key != "position" and key != "orientation":
-                self.robot_config_combo_box[key] = QtGui.QComboBox(self)
+                self.robot_config_combo_box[key] = QtWidgets.QComboBox(self)
                 self.robot_config_combo_box[key].addItem("Select")
                 self.robot_config_form.addRow(key, self.robot_config_combo_box[key])
                 self.robot_config_combo_box[key].currentIndexChanged.connect(
@@ -142,7 +142,7 @@ class PlannerGui(QtGui.QMainWindow):
                         self.selected_robot_combo_value[key] = value1
 
         for key, value in self.robot_default_config_params.items():
-            self.robot_config_params_spin_box[key] = QtGui.QDoubleSpinBox(self)
+            self.robot_config_params_spin_box[key] = QtWidgets.QDoubleSpinBox(self)
             self.robot_config_form.addRow(key, self.robot_config_params_spin_box[key])
             self.robot_config_params_spin_box[key].setValue(float(value["value"]))
             self.robot_config_params_spin_box[key].valueChanged.connect(

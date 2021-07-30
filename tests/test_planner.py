@@ -77,7 +77,7 @@ class Test_sqp_solver(unittest.TestCase):
         return x.value.T
 
     def test_random_joints_planning(self):
-        for sample, duration, joints in itertools.izip(self.samples, self.durations, self.joints):
+        for sample, duration, joints in itertools.zip(self.samples, self.durations, self.joints):
 
             self.cvx_optimizer.init(joints, sample, duration)
             actual_result = self.cvx_optimizer.solve()

@@ -476,7 +476,7 @@ class SimulationWorld(ISimulationWorldBase):
                 next_robot_state = next_robot_state[0]
                 zero_vec = [0.0] * len(current_robot_state)
 
-                for link_index, current_link_state, next_link_state in itertools.izip(self.planning_group_ids,
+                for link_index, current_link_state, next_link_state in itertools.zip(self.planning_group_ids,
                                                                                       current_link_states,
                                                                                       next_link_states):
 
@@ -562,7 +562,7 @@ class SimulationWorld(ISimulationWorldBase):
 
                 self.reset_joint_states_to(robot_id, current_time_step_of_trajectory, group)
 
-                for link_index, current_link_state, next_link_state in itertools.izip(self.planning_group_ids,
+                for link_index, current_link_state, next_link_state in itertools.zip(self.planning_group_ids,
                                                                                       current_link_states,
                                                                                       next_link_states):
                     if next_link_state is not None:
@@ -687,8 +687,8 @@ class SimulationWorld(ISimulationWorldBase):
 
     def reset_joint_states_to(self, robot_id, trajectory, joints):
         if len(trajectory) == len(joints):
-            for i in range(len(trajectory)):
-                sim.resetJointState(robot_id, self.joint_name_to_id[joints[i]], trajectory[i])
+            for j, t in zip(joints, trajectory):
+                sim.resetJointState(robot_id, self.joint_name_to_id[j], t)
                 status = "Reset joints to start pose is complete"
 
         else:
@@ -710,8 +710,8 @@ class SimulationWorld(ISimulationWorldBase):
     # method  to reset robot to a given state
     def reset_joint_states(self, robot_id, joints, group):
         # assert len(joints) == len(group)
-        for i in range(len(group)):
-            sim.resetJointState(robot_id, self.joint_name_to_id[group[i]], joints[i])
+        for g, j in zip(group, joints):
+            sim.resetJointState(robot_id, self.joint_name_to_id[g], j)
         status = "Reset joints to start pose is complete"
         # self.logger.info(status)
         return status

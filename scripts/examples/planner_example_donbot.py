@@ -2,7 +2,7 @@ import os, sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../"))
 from scripts.simulation.SimulationWorld import SimulationWorld
 from scripts.GUI import TrajPlanner
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 import sys
 from scripts.TrajectoryOptimizationPlanner.TrajectoryOptimizationPlanner import TrajectoryOptimizationPlanner
 from collections import OrderedDict
@@ -80,7 +80,7 @@ class PlannerExample:
 def start_planner_app():
     example = PlannerExample()
     # example.init()
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     window = TrajPlanner.PlannerGui(verbose="DEBUG", file_log=False, planner=example.planner)
     window.show()
     sys.exit(app.exec_())

@@ -11,5 +11,6 @@ CastClosestPointInfo = namedtuple('ContactPointInfo', ['contact_flag', 'body_uni
 
 ClosestPointInfo = namedtuple('ClosestPointInfo', ['contact_flag', 'body_unique_id_a', 'body_unique_id_b', 'link_index_a',
                                          'link_index_b', 'position_on_a', 'position_on_b', 'contact_normal_on_b',
-                                         'contact_distance', 'normal_force'])
+                                         'contact_distance', 'normal_force', 'lateral_friction1', 'lateral_friction_dir1',
+                                         'lateral_friction2', 'lateral_friction_dir2'])
 

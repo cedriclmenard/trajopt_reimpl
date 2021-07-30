@@ -16,10 +16,10 @@ class MongoDriver():
     def insert(self, request):
         # print request
         self.db.insert(request)
-        print "saved request into database . . . . . . .  ."
+        print("saved request into database . . . . . . .  .")
 
     def say_hello(self):
-        print "hello . . ."
+        print("hello . . .")
 
     def drop(self):
         self.db.drop()

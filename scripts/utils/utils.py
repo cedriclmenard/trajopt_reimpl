@@ -1,5 +1,5 @@
 import numpy as np
-from itertools import tee, islice, chain, izip, cycle
+from itertools import tee, islice, chain, cycle
 import math
 import logging
 import rospkg
@@ -14,7 +14,7 @@ class Utils:
         prevs, items, nexts = tee(some_iterable, 3)
         prevs = chain([None], prevs)
         nexts = chain(islice(nexts, 1, None), [None])
-        return izip(prevs, items, nexts)
+        return zip(prevs, items, nexts)
 
     # https://stackoverflow.com/questions/323750/how-to-access-previous-next-element-while-for-looping
     @classmethod
@@ -75,8 +75,8 @@ class Utils:
                 if type(current_elt) is list:
                     cls.interpolate_list(current_elt, samples)
                 new_list += cls.interpolate(current_elt, next_elt, samples).tolist()
-        print input_list
-        print new_list
+        print(input_list)
+        print(new_list)
         return new_list
 
     @classmethod
