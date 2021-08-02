@@ -1,0 +1,9 @@
+numpy
+pybullet
+rospkg
+yamlordereddictloader
+urdf_parser_py
+matplotlib
+cvxpy
+pymongo
+PyQt5

@@ -11,4 +11,4 @@
 world_props
 scripts/qpsolvers
 **/*.log
-**/*.txt
+*/*.txt
