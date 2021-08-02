@@ -222,12 +222,11 @@ class TrajectoryOptimizationPlanner:
                     group = self.robot_config["joints_groups"][kwargs["group"]]
                 if not len(group):
                     group = self.robot.get_planning_group_from_srdf(group_name)
-            if group_state in kwargs and len(group):
+            if group_state in kwargs and len(group_name):
                 joint_states = kwargs[group_state]
                 if type(joint_states) is str and joint_states in self.robot_config["joint_configurations"]:
                     joint_states = self.robot_config["joint_configurations"][joint_states]
-                # if not len(joint_states):
-                else:
+                elif not len(joint_states):
                     group, joint_states = self.robot.get_group_state_from_srdf(joint_states)
                 if type(joint_states) is dict or type(joint_states) is OrderedDict:
                     joint_states = joint_states.values()

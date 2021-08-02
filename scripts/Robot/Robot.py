@@ -128,7 +128,7 @@ class Robot:
                 joints = []
 
                 assert len(current_state) == len(goal_state) == len(joint_group)
-                for joint, c_state, n_state in itertools.zip(joint_group, current_state, goal_state):
+                for joint, c_state, n_state in zip(joint_group, current_state, goal_state):
                     if joint in self.model.joint_map:
                         ignore_state = False
                         if ignore_goal_states is not None and len(ignore_goal_states):

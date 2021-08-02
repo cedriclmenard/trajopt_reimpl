@@ -210,8 +210,8 @@ class SimulationWorld(ISimulationWorldBase):
         contact_infos = [ClosestPointInfo(*x) for x in sim.getClosestPoints(robot_id, robot_id, distance)]
         distances = OrderedDict()
         for ci in contact_infos:
-            link_a = self.joint_id_to_info[ci.link_index_a].link_name
-            link_b = self.joint_id_to_info[ci.link_index_b].link_name
+            link_a = self.joint_id_to_info[ci.link_index_a].link_name.decode("UTF-8")
+            link_b = self.joint_id_to_info[ci.link_index_b].link_name.decode("UTF-8")
             if ci.link_index_a != ci.link_index_b and not self.ignored_collisions[link_a, link_b] and \
                             (link_b, link_a) not in distances:
                 distances[link_a, link_b] = ci
@@ -294,12 +294,12 @@ class SimulationWorld(ISimulationWorldBase):
     # method to print collision query result
     def print_contact_points(self, cp, time, index):
 
-        link_a = self.joint_id_to_info[cp.link_index_a].link_name
+        link_a = self.joint_id_to_info[cp.link_index_a].link_name.decode("UTF-8")
         if cp.body_unique_id_a == cp.body_unique_id_b:
-            link_b = self.joint_id_to_info[cp.link_index_b].link_name
+            link_b = self.joint_id_to_info[cp.link_index_b].link_name.decode("UTF-8")
         else:
-            # link_b = JointInfo(*sim.getJointInfo(cp.body_unique_id_b, cp.link_index_b)).link_name
-            link_b = self.joint_id_to_info[cp.link_index_b].link_name
+            # link_b = JointInfo(*sim.getJointInfo(cp.body_unique_id_b, cp.link_index_b)).link_name.decode("UTF-8")
+            link_b = self.joint_id_to_info[cp.link_index_b].link_name.decode("UTF-8")
 
         print ("-----------cast points--------------")
         print ("time_step_count", time)
@@ -369,8 +369,8 @@ class SimulationWorld(ISimulationWorldBase):
                                                                    current_link_state, next_link_state, distance)
         for cp in cast_closest_points:
             if cp.link_index_a > -1 and cp.link_index_b > -1:
-                link_a = self.joint_id_to_info[cp.link_index_a].link_name
-                link_b = self.joint_id_to_info[cp.link_index_b].link_name
+                link_a = self.joint_id_to_info[cp.link_index_a].link_name.decode("UTF-8")
+                link_b = self.joint_id_to_info[cp.link_index_b].link_name.decode("UTF-8")
 
                 if cp.link_index_a == link_index and cp.link_index_a != cp.link_index_b and not self.ignored_collisions[link_a, link_b]:
 
@@ -476,7 +476,7 @@ class SimulationWorld(ISimulationWorldBase):
                 next_robot_state = next_robot_state[0]
                 zero_vec = [0.0] * len(current_robot_state)
 
-                for link_index, current_link_state, next_link_state in itertools.zip(self.planning_group_ids,
+                for link_index, current_link_state, next_link_state in zip(self.planning_group_ids,
                                                                                       current_link_states,
                                                                                       next_link_states):
 
@@ -562,7 +562,7 @@ class SimulationWorld(ISimulationWorldBase):
 
                 self.reset_joint_states_to(robot_id, current_time_step_of_trajectory, group)
 
-                for link_index, current_link_state, next_link_state in itertools.zip(self.planning_group_ids,
+                for link_index, current_link_state, next_link_state in zip(self.planning_group_ids,
                                                                                       current_link_states,
                                                                                       next_link_states):
                     if next_link_state is not None:
@@ -607,8 +607,8 @@ class SimulationWorld(ISimulationWorldBase):
 
                         for cp in cast_closest_points:
                             if cp.link_index_a > -1 and cp.link_index_b > -1:
-                                link_a = self.joint_id_to_info[cp.link_index_a].link_name
-                                link_b = self.joint_id_to_info[cp.link_index_b].link_name
+                                link_a = self.joint_id_to_info[cp.link_index_a].link_name.decode("UTF-8")
+                                link_b = self.joint_id_to_info[cp.link_index_b].link_name.decode("UTF-8")
 
                                 if cp.link_index_a == link_index and cp.link_index_a != cp.link_index_b and not \
                                         self.ignored_collisions[link_a, link_b]:
@@ -657,8 +657,8 @@ class SimulationWorld(ISimulationWorldBase):
 
             for cp in closest_points:
                 if cp.link_index_a > -1 and cp.link_index_b > -1:
-                    link_a = self.joint_id_to_info[cp.link_index_a].link_name
-                    link_b = self.joint_id_to_info[cp.link_index_b].link_name
+                    link_a = self.joint_id_to_info[cp.link_index_a].link_name.decode("UTF-8")
+                    link_b = self.joint_id_to_info[cp.link_index_b].link_name.decode("UTF-8")
 
                     if cp.link_index_a == link_index and cp.link_index_a != cp.link_index_b and not \
                             self.ignored_collisions[link_a, link_b]:

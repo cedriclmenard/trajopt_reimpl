@@ -27,10 +27,14 @@ class PlannerGui(QtWidgets.QMainWindow):
 
         self.sqp_yaml = yaml.ConfigParser(self.sqp_config_file)
         self.sqp_config = self.sqp_yaml.get_by_key("sqp")
-        robot_config_file = file_path_prefix + self.config["robot"]["config"]
-        self.robot_default_config_params = self.config["robot"]["default_paramaters"]
-        robot_yaml = yaml.ConfigParser(robot_config_file)
-        self.robot_config = robot_yaml.get_by_key("robot")
+        if self.planner.robot_config:
+            self.robot_default_config_params = self.planner.robot_default_config_params
+            self.robot_config = self.planner.robot_config
+        else:
+            robot_config_file = file_path_prefix + self.config["robot"]["config"]
+            self.robot_default_config_params = self.config["robot"]["default_paramaters"]
+            robot_yaml = yaml.ConfigParser(robot_config_file)
+            self.robot_config = robot_yaml.get_by_key("robot")
 
         self.sqp_labels = {}
         self.sqp_spin_box = {}

@@ -45,9 +45,9 @@ class PlannerExample:
         table_id = self.planner.add_constraint_from_urdf("table", urdf_file=location_prefix + "table/table.urdf",
                                                          position=[0, 0, 0.0])
 
-        self.box_id = self.planner.add_constraint("box1", shape=self.planner.world.BOX, size=box_size[box],
-                                                  position=box_loc[loc],
-                                                  mass=100)
+        # self.box_id = self.planner.add_constraint("box1", shape=self.planner.world.BOX, size=box_size[box],
+        #                                           position=box_loc[loc],
+        #                                           mass=100)
 
         self.planner.world.toggle_rendering(1)
         self.planner.world.step_simulation_for(0.01)
@@ -62,7 +62,8 @@ def start_planner_app():
     example = PlannerExample()
     example.init()
     app = QtWidgets.QApplication(sys.argv)
-    window = TrajPlanner.PlannerGui(verbose="DEBUG", file_log=False, planner=example.planner, config_file=os.path.join(os.path.dirname(__file__), "..", "..", "config", "robot_config_kuka_arm.yaml"))
+    window = TrajPlanner.PlannerGui(verbose="DEBUG", file_log=False, planner=example.planner)
+    # window = TrajPlanner.PlannerGui(verbose="DEBUG", file_log=False, planner=example.planner, config_file=os.path.join(os.path.dirname(__file__), "..", "..", "config", "robot_config_kuka_arm.yaml"))
     window.show()
     sys.exit(app.exec_())
 
