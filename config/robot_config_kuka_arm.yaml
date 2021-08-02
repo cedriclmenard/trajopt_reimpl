@@ -1,6 +1,6 @@
 robot:
-    urdf: "/home/cedric/Documents/repos/bullet3/data/kuka_iiwa/model.urdf"
-    srdf: "/home/cedric/catkin_ws/src/robot_descriptions/kuka_iiwa_description/moveit_config/config/lbr_iiwa.srdf"
+    urdf: "./data/kuka_iiwa/model.urdf"
+    srdf: "./data/kuka_iiwa_description/moveit_config/config/lbr_iiwa.srdf"
     position: [0, 0.25, 0.6]
     orientation: [0.0, 0.0, 0.0]
     joints_groups:
