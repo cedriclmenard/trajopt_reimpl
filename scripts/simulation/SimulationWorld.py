@@ -322,6 +322,7 @@ class SimulationWorld(ISimulationWorldBase):
     # method to query for collision
     def get_convex_sweep_closest_points(self, body_a, body_b, link_index_a, current_state, next_state, distance=0.1):
         start = time.time()
+        
         cast_closest_points = [CastClosestPointInfo(*x) for x in
                                sim.getConvexSweepClosestPoints(body_a,
                                                                bodyB=body_b,

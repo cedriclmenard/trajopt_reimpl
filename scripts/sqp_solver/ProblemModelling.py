@@ -189,7 +189,7 @@ class ProblemModelling:
         velocity_matrix[i == j - self.no_of_joints] = 1.0
 
         # to slice zero last row
-        velocity_matrix.resize(velocity_matrix.shape[0] - self.no_of_joints, velocity_matrix.shape[1])
+        velocity_matrix = np.resize(velocity_matrix, (velocity_matrix.shape[0] - self.no_of_joints, velocity_matrix.shape[1]))
         return velocity_matrix
 
     # to convert between SQP solver state variables
