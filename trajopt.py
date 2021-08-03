@@ -126,9 +126,9 @@ class TrajOpt():
 
         return constraints, lower_limit, upper_limit
 
-    def get_group_and_state(self, group, state, group_in, goal_state=None):
+    def get_group_and_state(self, group, goal_state=None):
         if type(group) is str:
-            group = self.robot_config["joints_groups"][group_in]
+            group = self.robot_config["joints_groups"][group]
         if type(goal_state) is str:
             goal_state = self.robot_config["joint_configurations"][goal_state]
 
