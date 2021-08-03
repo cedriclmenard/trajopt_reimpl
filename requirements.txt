@@ -7,3 +7,4 @@ matplotlib
 cvxpy
 pymongo
 PyQt5
+pyyaml
