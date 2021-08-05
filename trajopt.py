@@ -29,6 +29,11 @@ class TrajOpt():
         self.world.add_collision_constraints(shape_id)
         return shape_id
 
+    def add_constraint_heightfield(self, name, data, mass=None, position=None, orientation=None, mesh_scale=None, use_maximalcoordinates=True):
+        shape_id = self.world.create_constraint_from_heightmap(name, data, mass, position, orientation, mesh_scale, use_maximalcoordinates)
+        self.world.add_collision_constraints(shape_id)
+        return shape_id
+
     def get_trajectory(self, group_in=None, start_state=None, goal_state=None, samples=20, duration=10, collision_safe_distance=0.05, collision_check_distance=0.1, ignore_goal_states=True):
         group = []
         group_name = group_in

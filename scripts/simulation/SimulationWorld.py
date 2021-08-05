@@ -137,6 +137,38 @@ class SimulationWorld(ISimulationWorldBase):
 
         return shape_id
 
+    def create_constraint_from_heightmap(self, name, data, mass=1, position=None, orientation=None,
+                                    mesh_scale=None, use_maximalcoordinates=True):
+        if position is None:
+            position = [0, 0, 0]
+        if orientation is None:
+            orientation = [0, 0, 0, 1]
+        if mesh_scale is None:
+            mesh_scale = [1, 1, 1]
+        # vis_id = sim.createVisualShape(shapeType=sim.GEOM_HEIGHTFIELD, fileName=file_name,
+        #                                     rgbaColor=rgba_color,
+        #                                     specularColor=specularColor,
+        #                                     visualFramePosition=visual_frame_shift,
+        #                                     meshScale=mesh_scale
+        #                                     )
+        # col_id = sim.createCollisionShape(shapeType=sim.GEOM_HEIGHTFIELD, fileName=file_name,
+        #                                           collisionFramePosition=collision_frame_shift,
+        #                                           meshScale=mesh_scale
+        #                                           )
+        col_id = sim.createCollisionShape(  shapeType = sim.GEOM_HEIGHTFIELD, 
+                                            meshScale=mesh_scale, 
+                                            # heightfieldTextureScaling=(numHeightfieldRows-1)/2, 
+                                            heightfieldData=data, 
+                                            numHeightfieldRows=data.shape[0], 
+                                            numHeightfieldColumns=data.shape[1])
+
+        shape_id = sim.createMultiBody(baseMass=mass, basePosition=position, baseOrientation=orientation,
+                                       baseCollisionShapeIndex=col_id,
+                                       useMaximalCoordinates=use_maximalcoordinates)
+        self.scene_items[shape_id] = name
+
+        return shape_id
+
     # adding collisioin constraints ids to list, so that collision query can be made against it
     def add_collision_constraints(self, constraint_id):
         self.collision_constraints.append(constraint_id)
