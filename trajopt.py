@@ -4,21 +4,24 @@ from collections import OrderedDict
 import time
 import numpy as np
 
-from trajopt.scripts.simulation.SimulationWorld import SimulationWorld
-from trajopt.scripts.Robot import Robot
+from scripts.simulation.SimulationWorld import SimulationWorld
+from scripts.Robot import Robot
 
 
 class TrajOpt():
     def __init__(self, robot_urdf, robot_srdf, robot_position, robot_orientation, sqp_config=None, use_gui=False) -> None:
         self.if_plot_traj = False
+
+        # Load world
+        self.world = SimulationWorld(use_gui=use_gui)
+
         # Load robot
         self.robot = Robot()
         self.robot.id = self.world.load_robot(robot_urdf, robot_position, robot_orientation, use_fixed_base=True)
         self.robot.load_robot_model(robot_urdf)
         self.load_robot_srdf(robot_srdf)
 
-        # Load world
-        self.world = SimulationWorld(use_gui=use_gui)
+        
 
         # Load solver config
         with open(os.path.join(os.path.dirname(__file__), "config", "sqp_config.yaml"), 'r') as f:
