@@ -169,7 +169,7 @@ class TrajectoryOptimizationPlanner:
                                         )
 
         self.world.toggle_rendering_while_planning(False)
-        _, planning_time, _ = self.robot.calulate_trajecotory(self.callback_function_from_solver)
+        _, planning_time, _ = self.robot.calulate_trajectory(self.callback_function_from_solver)
         trajectory = self.robot.planner.get_trajectory()
 
         is_collision_free = self.world.is_trajectory_collision_free(self.robot.id, self.robot.get_trajectory().final,

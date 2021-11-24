@@ -24,7 +24,7 @@ class Robot:
     # method to load robot model from urdf file
     def load_robot_model(self, urdf_file=None):
         if urdf_file is not None:
-            self.model = URDF.from_xml_file(urdf_file)
+            self.model = URDF.from_xml_string(open(urdf_file, 'rb').read())
         else:
             self.model = URDF.from_parameter_server()
 
@@ -53,12 +53,12 @@ class Robot:
         joint_state = OrderedDict()
         if (name, group) in self.group_states_map:
             joint_state = self.group_states_map[name, group]
-        return joint_state.keys(), joint_state.values()
+        return list(joint_state.keys()), list(joint_state.values())
 
     # planning group name as string to joint names list
     def get_planning_group_from_srdf(self, group):
-        if tuple(group) in self.group_map:
-            group = self.group_map[group]
+        # if tuple(group) in self.group_map:
+        group = list(self.group_map[group])
         return group
 
     # planning group name as string to joint states list
@@ -144,7 +144,7 @@ class Robot:
                               solver=solver, solver_config=solver_config,
                               solver_class=solver_class, decimals_to_round=decimals_to_round, verbose=verbose)
 
-    def calulate_trajecotory(self, callback_function=None):
+    def calulate_trajectory(self, callback_function=None):
         status, planning_time, can_execute_trajectory = self.planner.calculate_trajectory(callback_function=callback_function)
         return status, planning_time, can_execute_trajectory
 

@@ -43,7 +43,7 @@ class TrajOpt():
         if group_name is not None:
             if type(group_name) is list:
                 group = group_name
-            if type(group_name) is str and group_name in self.robot_config["joints_groups"]:
+            if type(group_name) is str and group_name in self.robot.group_map:
                 group = self.robot_config["joints_groups"][group_name]
             if not len(group):
                 group = self.robot.get_planning_group_from_srdf(group_name)
@@ -103,17 +103,77 @@ class TrajOpt():
 
         return status, is_collision_free, trajectory
 
-    def reset_robot_to(self, state, group, key="reset_state"):
-        group, joint_states = self.get_planning_group_and_corresponding_state(key, group=group, reset_state=state)
-        self.world.reset_joint_states(self.robot.id, joint_states, group)
+    def generate_trajectory(self, group, start_state, goal_state, samples=20, duration=10, collision_safe_distance=0.05, collision_check_distance=0.1, ignore_goal_states=True):
+        group_name = None
+        if type(group) is not list:
+            group_name = group
+            group = self.robot.get_planning_group_from_srdf(group)
 
-    def get_group_names(self, group):
-        if type(group) is str:
-            group = self.robot_config["joints_groups"][group]
-        if type(group) is dict or type(group) is OrderedDict:
-            group = group.values()
+        if start_state is str:
+            assert group_name, "make sure the input group is a group name to use a named start state"
+            start_state = self.robot.get_planning_group_joint_values(start_state, group_name)
 
-        return group
+        self.reset_robot_to(start_state, group)
+        status, is_collision_free, trajectory = "start state in collision", False, -1
+        is_start_state_in_collision = self.world.is_given_state_in_collision(self.robot.id, start_state, group)
+        if is_start_state_in_collision:
+            print("is_start_state_in_collision", is_start_state_in_collision)
+            status = "start state in collision"
+            return status, is_collision_free, trajectory
+
+        if goal_state is str:
+            assert group_name, "make sure the input group is a group name to use a named goal state"
+            goal_state = self.robot.get_planning_group_joint_values(goal_state, group_name)
+
+        status, is_collision_free, trajectory = "goal state in collision", False, -1
+        is_goal_in_collision = self.world.is_given_state_in_collision(self.robot.id, goal_state, group)
+        if is_goal_in_collision:
+            print("is_goal_in_collision", is_goal_in_collision)
+            status = "goal state in collision"
+            return status, is_collision_free, trajectory
+
+        self.robot.init_plan_trajectory(group=group, current_state=start_state,
+                                        goal_state=goal_state, samples=samples, duration=duration,
+                                        collision_safe_distance=collision_safe_distance,
+                                        collision_check_distance=collision_check_distance,
+                                        solver_class=self.sqp_config["solver_class"],
+                                        ignore_goal_states=ignore_goal_states
+                                        )
+
+        self.world.toggle_rendering_while_planning(False)
+        _, planning_time, _ = self.robot.calulate_trajectory(self.callback_function_from_solver)
+        trajectory = self.robot.planner.get_trajectory()
+
+        is_collision_free = self.world.is_trajectory_collision_free(self.robot.id, self.robot.get_trajectory().final,
+                                                                    group,
+                                                                    0.02)
+        self.world.toggle_rendering_while_planning(True)
+        self.elapsed_time = self.robot.planner.sqp_solver.solving_time + \
+                            self.world.collision_check_time + self.robot.planner.prob_model_time
+        status = "Optimal Trajectory has been found in " + str(self.elapsed_time) + " secs"
+        self.logger.info(status)
+        self.log_infos()
+
+        if self.if_plot_traj:
+            self.robot.planner.trajectory.plot_trajectories()
+
+        return status, is_collision_free, trajectory
+
+    def reset_robot_to(self, state, group):
+        if state is not list and group is not list:
+            r = self.robot.get_planning_group_joint_values(state, group)
+            state = r[1]
+            group = r[0]
+            
+        self.world.reset_joint_states(self.robot.id, state, group)
+
+    # def get_group_names(self, group):
+    #     if type(group) is str:
+    #         group = self.robot_config["joints_groups"][group]
+    #     if type(group) is dict or type(group) is OrderedDict:
+    #         group = group.values()
+
+    #     return group
     
     def callback_function_from_solver(self, new_trajectory, delta_trajectory=None):
 
@@ -144,3 +204,7 @@ class TrajOpt():
             goal_state = goal_state.values()
 
         return goal_state
+
+    def load_robot_srdf(self, srdf_file):
+        self.robot.load_srdf(srdf_file)
+        self.world.ignored_collisions = self.robot.get_ignored_collsion()
