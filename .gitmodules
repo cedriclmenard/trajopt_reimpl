@@ -1,3 +1,3 @@
 [submodule "bullet3"]
     path = dependencies/bullet3
-    url = https://github/cedriclmenard/bullet3
+    url = https://github.com/cedriclmenard/bullet3
