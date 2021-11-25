@@ -1,3 +1,7 @@
-python3 ./dependencies/bullet3/setup.py build
-python3 ./dependencies/bullet3/setup.py install
-pip3 install -r requirements.txt
+cd dependencies/bullet3
+python3 setup.py build
+python3 setup.py install
+
+cd ../urdfpy
+python3 setup.py build
+python3 setup.py install

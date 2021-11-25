@@ -25,6 +25,7 @@ class Robot:
     def load_robot_model(self, urdf_file=None):
         if urdf_file is not None:
             self.model = URDF.from_xml_string(open(urdf_file, 'rb').read())
+            self.urdf_file = urdf_file
         else:
             self.model = URDF.from_parameter_server()
 

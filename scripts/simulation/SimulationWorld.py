@@ -222,7 +222,7 @@ class SimulationWorld(ISimulationWorldBase):
             self.joint_name_to_info[joint_info.joint_name] = joint_info
             self.joint_id_to_info[joint_info.joint_index] = joint_info
             if joint_info.q_index > -1:
-                self.joint_name_to_jac_id[joint_info.joint_name] = dof_count
+                self.joint_name_to_jac_id[joint_info.joint_name.decode("UTF-8")] = dof_count
                 dof_count += 1
 
         for body_a, body_b in itertools.combinations(self.joint_ids, 2):

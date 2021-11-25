@@ -176,7 +176,7 @@ class SQPsolver:
         cons3_cond = np.isclose(np.matmul(self.A, x_k), self.b, rtol=tolerance, atol=tolerance)
         cons4_cond = True
         if self.D is not None:
-            p_k = np.hstack([x_k] * (self.D.shape[1] / p.shape[0]))
+            p_k = np.hstack([x_k] * (self.D.shape[1] // p.shape[0]))
             cons4_cond = np.isclose(np.matmul(self.D, p_k) >= self.lbD, 1, rtol=tolerance, atol=tolerance).all()
 
         return cons1_cond.all() and cons2_cond.all() and cons3_cond.all() and cons4_cond
@@ -188,7 +188,7 @@ class SQPsolver:
         cons3 = np.subtract(np.matmul(self.A, x_k), self.b)
         cons4 = 0
         if self.D is not None:
-            p_k = np.hstack([x_k] * (self.D.shape[1] / p.shape[0]))
+            p_k = np.hstack([x_k] * (self.D.shape[1] // p.shape[0]))
             cons4 = self.lbD - cvxpy.matmul(self.D, p_k)
 
         return cons1.flatten(), cons2.flatten(), cons3.flatten(), cons4
@@ -213,18 +213,18 @@ class SQPsolver:
     def get_model_objective(self, x_k, p, penalty):
         cons1_at_xk, cons2_at_xk, cons3_at_xk, cons4_at_xk = self.evaluate_constraints(x_k, p)
         cons1_grad_at_xk, cons2_grad_at_xk, cons3_grad_at_xk, cons4_grad_at_xk = self.get_constraints_gradients()
-        cons1_model = cons1_at_xk + cons1_grad_at_xk * p
-        cons2_model = cons2_at_xk + cons2_grad_at_xk * p
-        cons3_model = cons3_at_xk + cons3_grad_at_xk * p
+        cons1_model = cons1_at_xk + cons1_grad_at_xk @ p
+        cons2_model = cons2_at_xk + cons2_grad_at_xk @ p
+        cons3_model = cons3_at_xk + cons3_grad_at_xk @ p
 
         cons4_model = 0
         if self.D is not None:
-            p1 = cvxpy.hstack([p] * (self.D.shape[1] / p.shape[0]))
+            p1 = cvxpy.hstack([p] * (self.D.shape[1] // p.shape[0]))
             cons4_model = cons4_at_xk + cvxpy.matmul(cons4_grad_at_xk, p1)
 
         objective_grad_at_xk, objective_hess_at_xk = self.get_objective_gradient_and_hessian(x_k)
         objective_at_xk = self.get_actual_objective(x_k, p, penalty)
-        model = objective_at_xk.value + objective_grad_at_xk * p + 0.5 * cvxpy.quad_form(p, objective_hess_at_xk)
+        model = objective_at_xk.value + objective_grad_at_xk @ p + 0.5 * cvxpy.quad_form(p, objective_hess_at_xk)
 
         model += penalty * (cvxpy.norm(cons1_model, self.penalty_norm) + cvxpy.norm(cons2_model, self.penalty_norm)
                             + cvxpy.norm(cons3_model, self.penalty_norm)
@@ -236,14 +236,14 @@ class SQPsolver:
     def get_actual_objective(self, xk, p, penalty):
         x = cvxpy.Variable(self.P.shape[0])
         x.value = copy.copy(xk)
-        objective = 0.5 * cvxpy.quad_form(x, self.P) + self.q * x
-        constraints1 = cvxpy.norm(self.G * x - self.ubG.flatten(), self.penalty_norm)
-        constraints2 = cvxpy.norm(-self.G * x + self.lbG.flatten(), self.penalty_norm)
-        constraints3 = cvxpy.norm(self.A * x - self.b.flatten(), self.penalty_norm)
+        objective = 0.5 * cvxpy.quad_form(x, self.P) + self.q @ x
+        constraints1 = cvxpy.norm(self.G @ x - self.ubG.flatten(), self.penalty_norm)
+        constraints2 = cvxpy.norm(-self.G @ x + self.lbG.flatten(), self.penalty_norm)
+        constraints3 = cvxpy.norm(self.A @ x - self.b.flatten(), self.penalty_norm)
 
         constraints4 = 0
         if self.D is not None:
-            p1 = np.hstack([xk] * (self.D.shape[1] / p.shape[0]))
+            p1 = np.hstack([xk] * (self.D.shape[1] // p.shape[0]))
             constraints4 = cvxpy.norm(self.lbD - cvxpy.matmul(self.D, p1), self.penalty_norm)
 
         objective += penalty * (constraints1 + constraints2 + constraints3 + constraints4)
